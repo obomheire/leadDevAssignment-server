@@ -10,13 +10,21 @@ import morgan from "morgan";
 import { Server } from "http";
 import { connect } from "./connection/mongoConnect";
 import { connectTestDB } from "./connection/mongoMemoryServer";
+import errorHandler from "./utils/errorHandler";
+import authJwt from "./utils/jwt";
+import cors from "cors";
 
 //App variables
 const app: Application = express();
 const api = process.env.API_URL;
 
 //Middlewares
+app.use(cors());
+app.use(authJwt());
 app.use(morgan("dev"));
+app.use(errorHandler());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 //Routes
 app.get("/", (req: Request, res: Response) => {
